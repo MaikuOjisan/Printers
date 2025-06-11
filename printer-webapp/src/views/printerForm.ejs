@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Printer Form</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Printer Information</h1>
+        <form action="/printers" method="POST">
+            <label for="printerName">Printer Name:</label>
+            <input type="text" id="printerName" name="printerName" required>
+
+            <label for="printerModel">Printer Model:</label>
+            <input type="text" id="printerModel" name="printerModel" required>
+
+            <label for="printerSerial">Printer Serial:</label>
+            <input type="text" id="printerSerial" name="printerSerial" required>
+
+            <label for="printerContact">Printer Contact:</label>
+            <input type="text" id="printerContact" name="printerContact" required>
+
+            <label for="printerNotes">Printer Notes:</label>
+            <textarea id="printerNotes" name="printerNotes"></textarea>
+
+            <label for="printerToner">Printer Toner:</label>
+            <input type="text" id="printerToner" name="printerToner" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
