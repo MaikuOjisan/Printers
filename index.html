@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meraux Printers</title>
+  <style>
+    body {
+      background: #d3d3d3;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      padding: 36px 24px 32px 24px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 36px;
+      letter-spacing: 1px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .controls input[type="file"] {
+      font-size: 15px;
+    }
+    .controls input[type="text"] {
+      width: 260px;
+      padding: 8px 12px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      font-size: 16px;
+      background: #f8f8f8;
+      transition: border 0.2s;
+    }
+    .controls input[type="text"]:focus {
+      border: 1.5px solid #888;
+      outline: none;
+    }
+    .controls button {
+      padding: 8px 18px;
+      border-radius: 4px;
+      border: none;
+      background: #4a90e2;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .controls button:disabled {
+      background: #b0b0b0;
+      cursor: not-allowed;
+    }
+    .printer-list {
+      margin-top: 10px;
+    }
+    .printer-card {
+      background: #f4f4f4;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      padding: 22px 30px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-left: 5px solid #4a90e2;
+    }
+    .printer-section {
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    .label {
+      font-weight: 600;
+      color: #222;
+      margin-right: 10px;
+      min-width: 70px;
+      display: inline-block;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 10px; }
+      .printer-card { padding: 12px; }
+      .controls { flex-direction: column; gap: 10px; }
+      .controls input[type="text"] { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Meraux Printers</h1>
+    <div class="controls">
+      <input type="file" id="csvFile" accept=".csv">
+      <input type="text" id="searchInput" placeholder="Search by Serial Number..." disabled>
+      <button id="listAllBtn" disabled>List All Printers</button>
+    </div>
+    <div class="printer-list" id="printersList"></div>
+  </div>
+  <script>
+    let printers = [];
+
+    document.getElementById('csvFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        printers = parseCSV(event.target.result);
+        document.getElementById('searchInput').disabled = false;
+        document.getElementById('listAllBtn').disabled = false;
+        renderPrinters(printers);
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const query = e.target.value.trim().toLowerCase();
+      const filtered = printers.filter(p => p.serial.toLowerCase().includes(query));
+      renderPrinters(filtered);
+    });
+
+    document.getElementById('listAllBtn').addEventListener('click', function() {
+      document.getElementById('searchInput').value = '';
+      renderPrinters(printers);
+    });
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = values[i] || '');
+        return {
+          name: obj.name || '',
+          model: obj.model || '',
+          serial: obj.serial || '',
+          contact: obj.contact || '',
+          notes: obj.notes || ''
+        };
+      });
+    }
+
+    function renderPrinters(list) {
+      const container = document.getElementById('printersList');
+      container.innerHTML = '';
+      if (list.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:#888;">No printers found.</p>';
+        return;
+      }
+      list.forEach(printer => {
+        const card = document.createElement('div');
+        card.className = 'printer-card';
+        card.innerHTML = `
+          <div class="printer-section"><span class="label">Name:</span> ${escapeHTML(printer.name)}</div>
+          <div class="printer-section"><span class="label">Model:</span> ${escapeHTML(printer.model)}</div>
+          <div class="printer-section"><span class="label">Serial:</span> ${escapeHTML(printer.serial)}</div>
+          <div class="printer-section"><span class="label">Contact:</span> ${escapeHTML(printer.contact)}</div>
+          <div class="printer-section"><span class="label">Notes:</span> ${escapeHTML(printer.notes)}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function escapeHTML(str) {
+      return (str || '').replace(/[&<>"']/g, function(m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        })[m];
+      });
+    }
+  </script>
+</body>
+</html>
