@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayPrinters(filteredPrinters);
     }
 
+    function listAllPrinters() {
+    document.getElementById('search').value = '';
+    displayPrinters(printers);
+}
+
     searchInput.addEventListener('input', filterPrinters);
     displayPrinters(printerData);
 });
