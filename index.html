@@ -168,7 +168,7 @@
                     </div>
                     <div class="printer-section">
                         <a
-                            href="mailto:${printer.contact}?cc=Mike.J@V.com&subject=Toner%20Ready%20for%20Pickup&body=Hello,%0A%0AToner for printer ${printer.name || ''} (${printer.model || ''}, Serial: ${printer.serial || ''}) Location: $(printer.location || ''} is ready for pickup at the Admin Front Desk.%0A%0AThank you."
+                            href="mailto:${printer.contact}?cc=Mike.J@V.com&subject=Toner%20Ready%20for%20Pickup&body=Hello,%0A%0AToner for printer ${printer.name || ''} (${printer.model || ''}, Serial: ${printer.serial || ''}) Location: ${printer.location || ''} is ready for pickup at the Admin Front Desk.%0A%0AThank you."
                             class="email-btn"
                             style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
                             ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
