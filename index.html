@@ -126,7 +126,7 @@
                 if (!res.ok) throw new Error('printers.csv not found');
                 const csv = await res.text();
                 printers = parseCSV(csv);
-                listAllPrinters();
+                //listAllPrinters();
             } catch (err) {
                 document.getElementById('printerList').innerHTML = 
                     `<div style="color:#b91c1c; text-align:center; margin-top:40px;">Failed to load printers.csv</div>`;
