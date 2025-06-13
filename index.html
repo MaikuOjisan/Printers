@@ -166,14 +166,24 @@
                         <span class="printer-label">Notes:</span>
                         <span class="printer-value">${printer.notes || ''}</span>
                     </div>
-                    <div class="printer-section">
-                        <a
-                            href="mailto:${printer.contact}?cc=Mike.J@V.com&subject=Toner%20Ready%20for%20Pickup&body=Hello,%0A%0AToner for printer ${printer.name || ''} (${printer.model || ''}, Serial: ${printer.serial || ''}, Location: ${printer.location || ''}) is ready for pickup at the Admin Front Desk.%0A%0AThank you."
-                            class="email-btn"
-                            style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
-                            ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
-                            >Email Contact: Toner Ready</a>
-                    </div>   
+        <div class="printer-section">
+            <label for="tonerSelect${idx}" class="printer-label">Toner:</label>
+            <select id="tonerSelect${idx}" class="toner-select" style="margin-left:8px;">
+                <option value="Black">Black</option>
+                <option value="Cyan">Cyan</option>
+                <option value="Magenta">Magenta</option>
+                <option value="Yellow">Yellow</option>
+            </select>
+        </div>
+        <div class="printer-section">
+            <a
+                href="#"
+                class="email-btn"
+                style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
+                onclick="sendTonerEmail('${printer.contact}', '${printer.name}', '${printer.model}', '${printer.serial}', '${printer.location}', '${printer.contact}', '${printer.notes}', 'tonerSelect${idx}'); return false;"
+                ${!printer.contact ? 'tabindex=\"-1\" aria-disabled=\"true\" style=\"pointer-events:none;opacity:0.5;\"' : ''}
+            >Email Contact: Toner Ready</a>
+        </div>
                 </div>
             `).join('');
         }
@@ -200,6 +210,16 @@
                 searchPrinter();
             }
         });
+
+        function sendTonerEmail(contact, name, model, serial, location, contactField, notes, selectId) {
+            const toner = document.getElementById(selectId).value;
+            const subject = encodeURIComponent('Toner Ready for Pickup');
+            const body = encodeURIComponent(
+                `Hello,\n\nThis is a courtesy message letting you know that ${toner} toner for printer ${name} is ready for pickup at the Admin Front Desk.\n\n--- Printer Details ---\nName: ${name}\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nContact: ${contactField}\nNotes: ${notes}\n`
+         );
+        const cc = encodeURIComponent('Mike.J@V.com');
+        window.location.href = `mailto:${contact}?cc=${cc}&subject=${subject}&body=${body}`;
+}
 
 
         // Load on page load
