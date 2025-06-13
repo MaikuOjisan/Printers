@@ -84,6 +84,14 @@
         .printer-value {
             color: #3b4a6b;
         }
+        .toner-select {
+            padding: 8px 12px;
+            border: 1px solid #bfc9d9;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #fff;
+            cursor: pointer;
+        }
         @media (max-width: 600px) {
             .container {
                 padding: 16px 8px;
@@ -167,12 +175,20 @@
                         <span class="printer-value">${printer.notes || ''}</span>
                     </div>
                     <div class="printer-section">
+                        <label for="tonerType-${printer.serial}" class="printer-label">Toner Type:</label>
+                        <select id="tonerType-${printer.serial}" class="toner-select" style="margin-right:12px;">
+                            <option value="Black">Black</option>
+                            <option value="Cyan">Cyan</option>
+                            <option value="Magenta">Magenta</option>
+                            <option value="Yellow">Yellow</option>
+                        </select>
                         <a
-                            href="mailto:${printer.contact}?cc=Mike.Johnston@valero.com&subject=Toner%20Ready%20for%20Pickup&body=Hello,%0A%0AToner for printer ${printer.name || ''} (${printer.model || ''}, Serial: ${printer.serial || ''}, Location: ${printer.location || ''}) is ready for pickup at the Admin Front Desk.%0A%0AThank you."
+                            href="#"
                             class="email-btn"
                             style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
+                            onclick="sendTonerEmail(this, '${printer.contact}', '${printer.name || ''}', '${printer.model || ''}', '${printer.serial || ''}', '${printer.location || ''}', '${printer.notes || ''}', 'tonerType-${printer.serial}')"
                             ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
-                            >Email Contact: Toner Ready</a>
+                        >Email Contact: Toner Ready</a>
                     </div>   
                 </div>
             `).join('');
@@ -204,6 +220,14 @@
 
         // Load on page load
         window.onload = loadPrinters;
+
+        function sendTonerEmail(link, contact, name, model, serial, location, notes, tonerSelectId) {
+            const tonerType = document.getElementById(tonerSelectId).value;
+            const subject = encodeURIComponent('Toner Ready for Pickup');
+            const body = encodeURIComponent(`Hello, This is a courtesy message letting you know that Toner ${tonerType} for printer ${name} is available for pickup at the Admin Front Desk.\n\nPrinter Details:\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nNotes: ${notes}\n\nThank you.`);
+            const mailto = `mailto:${contact}?cc=Mike.Johnston@valero.com&subject=${subject}&body=${body}`;
+            link.href = mailto;
+        }
     </script>
 </body>
 </html>
