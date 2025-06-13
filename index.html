@@ -229,7 +229,7 @@
             }
             const tonerString = tonerTypes.join(', ');
             const subject = encodeURIComponent('Toner Ready for Pickup');
-            const body = encodeURIComponent(`Hello,\n\nThis is a courtesy message letting you know that Toner(s) ${tonerString} for printer ${name} is available for pickup at the Admin Front Desk.\n\n=====Printer Details=====\n\nName: ${name}\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nNotes: ${notes}\n\nThank you.`);
+            const body = encodeURIComponent(`Hello,\n\nThis is a courtesy message letting you know that Toner(s) ${tonerString} for printer ${name} are available for pickup at the Admin Front Desk.\n\n=====Printer Details=====\n\nName: ${name}\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nNotes: ${notes}\n\nThank you.`);
             const mailto = `mailto:${contact}?cc=Mike.Johnston@valero.com&subject=${subject}&body=${body}`;
             link.href = mailto;
             return true;
