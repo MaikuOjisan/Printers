@@ -175,18 +175,16 @@
                         <span class="printer-value">${printer.notes || ''}</span>
                     </div>
                     <div class="printer-section">
-                        <label for="tonerType-${printer.serial}" class="printer-label">Toner Type:</label>
-                        <select id="tonerType-${printer.serial}" class="toner-select" style="margin-right:12px;">
-                            <option value="Black">Black</option>
-                            <option value="Cyan">Cyan</option>
-                            <option value="Magenta">Magenta</option>
-                            <option value="Yellow">Yellow</option>
-                        </select>
+                        <span class="printer-label">Toner Types:</span>
+                        <label><input type="checkbox" class="toner-checkbox" id="tonerType-Black-${printer.serial}" value="Black"> Black</label>
+                        <label><input type="checkbox" class="toner-checkbox" id="tonerType-Cyan-${printer.serial}" value="Cyan"> Cyan</label>
+                        <label><input type="checkbox" class="toner-checkbox" id="tonerType-Magenta-${printer.serial}" value="Magenta"> Magenta</label>
+                        <label><input type="checkbox" class="toner-checkbox" id="tonerType-Yellow-${printer.serial}" value="Yellow"> Yellow</label>
                         <a
                             href="#"
                             class="email-btn"
                             style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
-                            onclick="sendTonerEmail(this, '${printer.contact}', '${printer.name || ''}', '${printer.model || ''}', '${printer.serial || ''}', '${printer.location || ''}', '${printer.notes || ''}', 'tonerType-${printer.serial}')"
+                            onclick="sendTonerEmail(this, '${printer.contact}', '${printer.name || ''}', '${printer.model || ''}', '${printer.serial || ''}', '${printer.location || ''}', '${printer.notes || ''}', '${printer.serial}')"
                             ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
                         >Email Contact: Toner Ready</a>
                     </div>   
@@ -221,12 +219,18 @@
         // Load on page load
         window.onload = loadPrinters;
 
-        function sendTonerEmail(link, contact, name, model, serial, location, notes, tonerSelectId) {
-            const tonerType = document.getElementById(tonerSelectId).value;
+        function sendTonerEmail(link, contact, name, model, serial, location, notes, serialId) {
+            const tonerTypes = Array.from(document.querySelectorAll(`.toner-checkbox[id^='tonerType-'][id$='-${serialId}']:checked`)).map(cb => cb.value);
+            if (tonerTypes.length === 0) {
+                alert('Please select at least one toner type.');
+                return false;
+            }
+            const tonerString = tonerTypes.join(', ');
             const subject = encodeURIComponent('Toner Ready for Pickup');
-            const body = encodeURIComponent(`Hello, This is a courtesy message letting you know that Toner ${tonerType} for printer ${name} is available for pickup at the Admin Front Desk.\n\nPrinter Details:\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nNotes: ${notes}\n\nThank you.`);
+            const body = encodeURIComponent(`Hello, This is a courtesy message letting you know that Toner(s) ${tonerString} for printer ${name} is available for pickup at the Admin Front Desk.\n\nPrinter Details:\nModel: ${model}\nSerial: ${serial}\nLocation: ${location}\nNotes: ${notes}\n\nThank you.`);
             const mailto = `mailto:${contact}?cc=Mike.Johnston@valero.com&subject=${subject}&body=${body}`;
             link.href = mailto;
+            return true;
         }
     </script>
 </body>
