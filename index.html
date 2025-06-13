@@ -180,10 +180,12 @@
                         <label><input type="checkbox" class="toner-checkbox" id="tonerType-Cyan-${printer.serial}" value="Cyan"> Cyan</label>
                         <label><input type="checkbox" class="toner-checkbox" id="tonerType-Magenta-${printer.serial}" value="Magenta"> Magenta</label>
                         <label><input type="checkbox" class="toner-checkbox" id="tonerType-Yellow-${printer.serial}" value="Yellow"> Yellow</label>
+                    </div>
+                    <div style="margin-top:8px;">
                         <a
                             href="#"
                             class="email-btn"
-                            style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
+                            style="padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
                             onclick="sendTonerEmail(this, '${printer.contact}', '${printer.name || ''}', '${printer.model || ''}', '${printer.serial || ''}', '${printer.location || ''}', '${printer.notes || ''}', '${printer.serial}')"
                             ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
                         >Email Contact: Toner Ready</a>
