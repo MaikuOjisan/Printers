@@ -126,7 +126,7 @@
                 if (!res.ok) throw new Error('printers.csv not found');
                 const csv = await res.text();
                 printers = parseCSV(csv);
-                listAllPrinters();
+                //listAllPrinters();
             } catch (err) {
                 document.getElementById('printerList').innerHTML = 
                     `<div style="color:#b91c1c; text-align:center; margin-top:40px;">Failed to load printers.csv</div>`;
@@ -159,9 +159,21 @@
                         <span class="printer-value">${printer.contact || ''}</span>
                     </div>
                     <div class="printer-section">
+                        <span class="printer-label">Location:</span>
+                        <span class="printer-value">${printer.location || ''}</span>
+                    </div>
+                    <div class="printer-section">
                         <span class="printer-label">Notes:</span>
                         <span class="printer-value">${printer.notes || ''}</span>
                     </div>
+                    <div class="printer-section">
+                        <a
+                            href="mailto:${printer.contact}?cc=Mike.Johnston@valero.com&subject=Toner%20Ready%20for%20Pickup&body=Hello,%0A%0AToner for printer ${printer.name || ''} (${printer.model || ''}, Serial: ${printer.serial || ''}, Location: ${printer.location || ''}) is ready for pickup at the Admin Front Desk.%0A%0AThank you."
+                            class="email-btn"
+                            style="margin-top:8px; padding:8px 18px; background:#2a3d66; color:#fff; border:none; border-radius:5px; text-decoration:none; font-size:0.98rem; display:inline-block;"
+                            ${!printer.contact ? 'tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.5;"' : ''}
+                            >Email Contact: Toner Ready</a>
+                    </div>   
                 </div>
             `).join('');
         }
@@ -182,6 +194,13 @@
             document.getElementById('serialInput').value = '';
             renderPrinters(printers);
         }
+
+        document.getElementById('serialInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                searchPrinter();
+            }
+        });
+
 
         // Load on page load
         window.onload = loadPrinters;
